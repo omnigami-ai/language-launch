@@ -2,7 +2,7 @@
 
 Your product now speaks more languages. Show it.
 
-A 14-second announcement on your real screens. The headline says your product now speaks, each language rolls in by its own name as a carousel of your real screen swipes to its phone, one at a time, each held long enough to read. Then every phone flies into one row under the count, and your end card.
+A 15-second announcement on your real screens. The headline says your product now speaks, each language rolls in by its own name as a carousel of your real screen swipes to its phone, one at a time, each held long enough to read. Then every phone flies into one row under the count, and your end card.
 
 Watch it play live, and change its words, at [omnigami.ai/skills/language-launch](https://omnigami.ai/skills/language-launch).
 

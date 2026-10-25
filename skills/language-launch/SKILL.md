@@ -1,11 +1,11 @@
 ---
 name: language-launch
-description: Make a 14-second announcement video that a product now speaks more languages, on its real screens - the headline "<name> now speaks" over each language's own name, a carousel of the product's real screen, one phone per language, swiping one over as each name rolls in, each held long enough to read, then every phone flying into one row under the count, and the end card. Renders a tall (9:16) MP4 with sound. Use when the user asks for a localization, translation, "now in N languages", new languages or international launch video.
+description: Make a 15-second announcement video that a product now speaks more languages, on its real screens - the headline "<name> now speaks" over each language's own name, a carousel of the product's real screen, one phone per language, swiping one over as each name rolls in, each held long enough to read, then every phone flying into one row under the count, and the end card. Renders a tall (9:16) MP4 with sound. Use when the user asks for a localization, translation, "now in N languages", new languages or international launch video.
 ---
 
 # Language launch
 
-You make a 14-second film that says one thing: the product now speaks more
+You make a 15-second film (14.5 s) that says one thing: the product now speaks more
 languages. The headline says it in the product's own type ("Fernwise now
 speaks", then *English*, *Español*, *日本語*… in each language's own name),
 and the proof is the product itself: its main screen, captured in each
@@ -32,7 +32,7 @@ Read `style.md` before you start and `critique.md` before you judge.
 
 1. **Set up.**
    ```bash
-   mkdir -p language-launch-film && cp -R "$SKILL_DIR/reference" language-launch-film/reference && cp -R "$SKILL_DIR/reference" language-launch-film/film && cp -R "$SKILL_DIR/scripts" language-launch-film/scripts
+   mkdir -p language-launch-film && cp -R "$SKILL_DIR/reference" language-launch-film/reference && cp -R "$SKILL_DIR/reference" language-launch-film/film && cp -R "$SKILL_DIR/scripts" language-launch-film/scripts && cp -R "$SKILL_DIR/music" language-launch-film/music
    rm -rf language-launch-film/reference/out language-launch-film/film/out
    cd language-launch-film && npm init -y >/dev/null && npm i -D puppeteer-core
    ```
@@ -64,9 +64,9 @@ Read `style.md` before you start and `critique.md` before you judge.
 8. **Check it's repeatable:** `node scripts/render.mjs film --size 9:16 --check` must pass.
 9. **Render.**
    ```bash
-   node scripts/render.mjs film --size 9:16 --video --blur 4 --music --sound --poster 4.6
+   node scripts/render.mjs film --size 9:16 --video --blur 4 --audio music/song.mp3 --sound --poster 4.6
    ```
-   This writes `out/9x16.mp4` (1080 × 1920): 60 fps, motion blur, a synthesised 120 BPM bed and effects from omnigami's own sound kit, loudness about −14 LUFS, and a poster (`out/9x16-poster.png`). For the user's own song, use `--audio song.wav` instead of `--music`; it's fitted to the film by `song.mjs`: it starts on a bar line and, near the end, lands one hit and closes and fades (cleanest with the song's stems in a `song-stems/` folder beside it: the drums stop on that hit). A song near 120 BPM fits the film's cuts; `--from <seconds>` starts at another section of it. Run it in the foreground and wait for the file.
+   This writes `out/9x16.mp4` (1080 × 1920): 60 fps, motion blur, the skill's own song and effects from omnigami's own sound kit, loudness about −14 LUFS, and a poster (`out/9x16-poster.png`). The song (`music/song.mp3`: bright, joyful electro-pop at 120 BPM) is fitted to the film by `song.mjs`: it starts on a bar line and, near the end, lands one hit, where its drums stop and the rest closes and fades (from its stems in `music/song-stems/`). `--from <seconds>` starts at another of its distinct 8-bar sections (the song is about two minutes long). `--music` gives the synthesised 120 BPM score instead. For the user's own song, use `--audio their.wav` (cleanest with its stems in a `their-stems/` folder beside it); a song near 120 BPM fits the film's cuts. Run it in the foreground and wait for the file.
 10. **Write `language-launch-film/README.md`:** what each file is, how to add a language, how to recapture the screens, and the render command. Also write `out/CAPTION.md`: a post under 280 characters in the product's own words, with its URL; if the product's audience reads several of the languages, a line in each is fine.
 11. **Report:** the MP4, the poster, the caption, the story sentence and state list, the final scores, and the one change that would improve it most.
 
@@ -74,7 +74,7 @@ Read `style.md` before you start and `critique.md` before you judge.
 
 - **Only languages the product really has,** captured from the product, in its own translations. Never translate for the film.
 - **Each language in its own name and script,** with a face that covers it under an open licence.
-- **Let each language land.** Each one holds about a second and a quarter after its swipe: long enough to read the greeting and the first line. Add a language by adding time, never by shortening the holds.
+- **Let each language land.** Each one holds about a second and a quarter after its swipe: long enough to read the greeting and the first line. Add a language by adding time, never by shortening the holds. The row of names under the phones is read too (about a second, 0.25 s a word) before the words leave. Pause only for reading: the swipes and the fly into the row keep their pace (`style.md`).
 - **Keep the motion.** A name never rises into the line above; the old one leaves before the new one rises; shapes change in one move (`style.md`).
 - **Keep the engine rules** (`style.md`): `seek(t)` paints from its arguments only; no clocks, no `Math.random`, no timers, no network; every file inside `film/`.
 - **Only the user's brand.** No other company's name, logo or UI: the phone is the reference's unbranded photograph.
@@ -83,6 +83,7 @@ Read `style.md` before you start and `critique.md` before you judge.
 
 - `reference/`: the Fernwise film (`index.html`), its capture plan (`plans/mobile.json`) and captures (`assets/screens/`, with `screens.js`), the unbranded phone (`assets/art/phone.png`), fonts (Fraunces, Nunito, and Noto Serif JP and Noto Sans JP cut to the characters used; all SIL Open Font License), `kit.js`. Fernwise is a fictional company made for omnigami's examples; its translations live in `cast/fernwise/app/i18n.js`.
 - `scripts/`: `capture.mjs`, `screens.mjs`, `render.mjs`, `compare.mjs`, `preview.mjs`, `music.mjs`, `song.mjs` (fits a supplied song), `sfx.mjs` (with `sounds/`), `chrome.mjs`.
+- `music/`: the skill's song and its stems.
 - `style.md`: the grammar, the beats, the motion numbers, the banned list.
 - `critique.md`: how to score and what to hunt for.
 

@@ -18,7 +18,7 @@
 // German and Portuguese, captured from the app (plans/mobile.json). Tall (9:16).
 (() => {
   const { clamp, lerp, spring, loadFont, loadImage, measure, fitText, roundRect, easeOutExpo, easeInOutCubic } = window.kit;
-  const FPS = 60, BEAT = 0.5, DURATION = 28 * BEAT; // 120 BPM, 28 beats, 14 s
+  const FPS = 60, BEAT = 0.5, DURATION = 29 * BEAT; // 120 BPM, 29 beats, 14.5 s
   const W = 1080, H = 1920;
   const canvas = document.getElementById('c');
   const g = canvas.getContext('2d', { willReadFrequently: true });
@@ -47,8 +47,11 @@
   const T = {
     head: 0.25, phone: [0.45, 1.3], first: 1.0,
     lang: [2.5, 4.25, 6.0, 7.75], // each new language: its name rolls in and the row swipes to its phone
-    swipe: 0.6, count: 9.5, toRow: 0.85, names: 10.2, endOut: 11.4, tile: 11.6, word: 11.9, tagline: 12.2,
+    swipe: 0.6, count: 9.5, toRow: 0.85, names: 10.2, endOut: 11.9, tile: 12.1, word: 12.4, tagline: 12.7,
   };
+  // the founder's pauses (2026-10-22): pause only for what the viewer must read. The headline, each language and
+  // the count already hold long enough to read (each name about 1.2 s); the row's five names got only 0.6 s before
+  // they left, so the words leave a beat later (11.4 → 11.9) and the end card follows them by the same beat.
 
   // ---------- the phone: an unbranded phone, photographed, its screen cut out ----------
   const PHONE_SCREEN = [25, 26, 490, 1118];          // the screen's rect in phone.png's pixels
@@ -68,7 +71,7 @@
   }
   function phones(t) {
     const up = easeOutExpo(clamp((t - T.phone[0]) / (T.phone[1] - T.phone[0]))), { p, q } = carousel(t);
-    const r = easeInOutCubic(clamp((t - T.count) / T.toRow)), dip = q < 1 ? 1 - 0.07 * Math.sin(Math.PI * q) : 1;
+    const r = easeInOutCubic(clamp((t - T.count) / T.toRow)), dip = q < 1 ? 1 - 0.07 * Math.sin(Math.PI * q) ** 2 : 1; // sin²: the dip comes back to rest with the swipe (a plain sine was still moving at its last frame and stopped dead)
     return LANGS.map(([l, n], i) => {
       const d = i - p, ad = Math.min(1, Math.abs(d));
       let cx = W / 2 + d * STEP, top = 640 + 46 * ad + (1 - up) * 1350, sc = (1 - 0.1 * ad) * dip;
@@ -191,11 +194,11 @@
   const music = { style: 'organic', // the played sound (plucked strings, marimba, shaker) for a plants or botanicals brand
     bpm: 120, duration: DURATION, root: 50,
     chords: [[0, 4, 7], [5, 9, 12], [9, 12, 16], [7, 11, 14]],
-    sections: [{ from: 0, to: 1, pad: 0.7, hats: 0.3 }, { from: 1, to: 5.5, kick: 0.7, hats: 0.55, bass: 0.6, pad: 0.55 }, { from: 5.5, to: 7, pad: 0.7, hats: 0.3 }],
+    sections: [{ from: 0, to: 1, pad: 0.7, hats: 0.3 }, { from: 1, to: 5.5, kick: 0.7, hats: 0.55, bass: 0.6, pad: 0.55 }, { from: 5.5, to: 7.25, pad: 0.7, hats: 0.3 }],
   };
   const STATES = [[0, 'Headline'], [T.lang[0], 'Español'], [T.lang[1], '日本語'], [T.lang[2], 'Deutsch'], [T.lang[3], 'Português'], [T.count, 'The count'], [T.endOut, 'End card']];
   window.template = { fps: FPS, duration: DURATION, sizes: { '9:16': [1080, 1920] }, width: W, height: H, defaults: () => ({ size: '9:16', ...DEFAULTS }), fields: FIELDS, states: STATES, prepare, seek: (t, values) => seek(t, values), cues, music,
-    keyTimes: [0.2, 0.7, 1.6, 2.8, 3.6, 4.5, 5.4, 6.3, 7.2, 8.0, 8.9, 9.8, 10.6, 11.6, 12.4, 13.6] };
+    keyTimes: [0.2, 0.7, 1.6, 2.8, 3.6, 4.5, 5.4, 6.3, 7.2, 8.0, 8.9, 9.8, 10.6, 11.4, 12.9, 14.1] };
   const q = new URLSearchParams(location.search);
   if (window.parent === window && !q.has('render')) prepare().then(() => { const t0 = performance.now(); const loop = () => { seek(((performance.now() - t0) / 1000) % DURATION, {}); requestAnimationFrame(loop); }; loop(); });
 })();

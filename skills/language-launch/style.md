@@ -10,6 +10,7 @@ omnigami's examples, on its real Today screen in five languages.
 - **One language at a time, each its own phone, each held.** A new language every 1.75 s (three and a half beats): its name rolls in (the old one leaves upward first) as the carousel swipes one phone over, fast out with a soft settle, the phone in the middle dipping a little as it goes. Its neighbours peek in at the edges, set back a shade. A whole new phone, never the same screen redrawn: languages wrap differently, and a layout shifting in place looks like a fault. Then it holds about a second and a quarter.
 - **The count lands the point.** After the last language the name rolls to the count ("*5 languages.*"), and in one move every phone flies into a single row under the headline (which glides down to meet it); each language's name rises under its phone. They drop away, one after another, for the end card.
 - **The end card:** the product's icon pops in on a spring, its name rises under it, then its tagline in the italic.
+- **Room only for reading.** No pauses for their own sake: the swipes, the fly into the row and the drop keep their pace, and nothing is tapped. The founder's rule (2026-10-22): words hold about a quarter second a word once they've landed, a second at least. The headline over the first screen (1.2 s), each language's name (1.2 s) and the count already do; the row of names under the phones got 0.6 s, so the words leave a beat later (11.9 s) and the end card follows by the same beat. A hold is simply still.
 - **Text rises out of a mask line** and leaves through the top; a line never rises into the one above it (each line's mask ends just under the line over it).
 - **The product's own ground and type:** its deepest brand colour as a soft radial ground, its cream for type, one accent for the language names.
 
@@ -34,8 +35,8 @@ their tops at 1050, the names 78 px under the screens).
 | 2.5, 4.25, 6.0, 7.75 | each next language | the old name leaves (0.24 s), the new one rises 0.14 s later (0.38 s); the carousel swipes one phone over (0.6 s, ease-out power 3.4; the middle phone dips 7 %) |
 | 9.5 | the count | the name rolls to the count; every phone flies into one row (0.85 s, ease-in-out; size in log space) as the headline glides down |
 | 10.2 | every name | each language's name rises under its phone, 0.07 s apart |
-| 11.4 | out | the headline and the names leave upward; the phones drop away, 0.04 s apart |
-| 11.6 | end card | the icon pops (spring 260, 18); the name rises (11.9); the tagline (12.2); held to 14.0 |
+| 11.9 | out | the row's names have been read (1.1 s); the headline and the names leave upward; the phones drop away, 0.04 s apart |
+| 12.1 | end card | the icon pops (spring 260, 18); the name rises (12.4); the tagline (12.7); held to 14.5 |
 
 ## Type
 
@@ -52,7 +53,7 @@ Captured text keeps the product's size; at 2 px per CSS px its body text is
 ## Motion
 
 - **Rise:** in over 0.32–0.4 s (ease-out expo) from 1.45 × the size below; out over 0.24 s (ease-in-out) by 1.45 × the size, so even a descender clears the mask.
-- **Swipe:** the row moves one phone (860 px) in 0.6 s, fast out of the blocks with a long soft settle (1 − (1 − q)^3.4); the phone in the middle dips to 0.93 at the swipe's peak and comes back. No crossfade, and never one screen redrawn in place.
+- **Swipe:** the row moves one phone (860 px) in 0.6 s, fast out of the blocks with a long soft settle (1 − (1 − q)^3.4); the phone in the middle dips to 0.93 at the swipe's peak and comes back to rest with it (a sine squared, so it settles; a plain sine ended still moving and stopped dead). No crossfade, and never one screen redrawn in place.
 - **Phones:** rise in 0.85 s (ease-out expo) from 1350 px below; into the row in 0.85 s (ease-in-out, size in log space); away 1000 px in 0.5 s each, 0.04 s apart.
 - **Motion blur:** 4 sub-frames (`--blur 4`).
 
@@ -61,8 +62,10 @@ Captured text keeps the product's size; at 2 px per CSS px its body text is
 A `pop` as the headline lands and as each language's name arrives, a
 `swish` (with its `motion`) on each swipe and as the phones fly into the row, pops on the
 count, the row of names, the icon, the name and the tagline. No impacts or
-risers. A 120 BPM bed: pads and hats, the beat from bar 1 to the count,
-pads for the end card. Mastered around −14 LUFS.
+risers. The skill's own song (`music/song.mp3`, bright, joyful electro-pop at
+120 BPM), landing one hit near the end as its drums stop and the rest fades;
+with `--music`, the synthesised 120 BPM score instead: pads and hats, the beat
+from bar 1 to the count, pads for the end card. Mastered around −14 LUFS.
 
 The score's sound is `music.style`: here `'organic'` (plucked strings, a marimba, a shaker), as the reference's plants or botanicals brand has it. For the user's product, pick by what it is: `'organic'` for plants, food and drink, and other natural or handmade things; `'synth'` (oscillators, the default) for software and tools; `'felt'` (a sparse felt piano over a sub bass and a light kit) for a quiet, minimal film. In a break (`music.breaks`) the drums, bass and lead stop and the chords play on; the film's name seeds the key (always major), the progressions and the patterns.
 
