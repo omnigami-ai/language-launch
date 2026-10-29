@@ -1,7 +1,7 @@
 {
   "name": "omnigami-language-launch",
   "displayName": "Language launch",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Make a 15-second announcement video that a product now speaks more languages, on its real screens - the headline \"<name> now speaks\" over each language's own name, a carousel of the product's real screen, one phone per language, swiping one over as each name rolls in, each held long enough to read, then every phone flying into one row under the count, and the end card. Renders a tall (9:16) MP4 with sound. Use when the user asks for a localization, translation, \"now in N languages\", new languages or international launch video.",
   "author": {
     "name": "omnigami",
