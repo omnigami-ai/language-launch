@@ -21,13 +21,13 @@
   const FPS = 60, BEAT = 0.5, DURATION = 29 * BEAT; // 120 BPM, 29 beats, 14.5 s
   const W = 1080, H = 1920;
   const canvas = document.getElementById('c');
-  const g = canvas.getContext('2d', { willReadFrequently: true });
+  const g = kit.textContext(canvas.getContext('2d', { willReadFrequently: true }),{preserve:text=>text==='日本語'&&legacyCopy()});
 
   // ---------- Fernwise: colour, type, mark (cast/fernwise/brand.md) ----------
   const GROUND = ['#2C4F2E', '#1A3120'], CREAM = '#F6F1E7', SPROUT = '#9CC57A', MOSS = '#3E6B3A';
-  const SERIF = (s, w = 480) => `${w} ${s}px Fraunces, "Noto Serif JP"`;
-  const ITALIC = (s, w = 480) => `${w} ${s}px "Fraunces Italic", "Noto Serif JP"`;
-  const SANS = (s, w = 600) => `${w} ${s}px Nunito, "Noto Sans JP"`;
+  const SERIF = (s, w = 480) => `${w} ${s}px Fraunces${legacyCopy()?', "Language Noto Serif JP"':''}`;
+  const ITALIC = (s, w = 480) => `${w} ${s}px "Fraunces Italic"${legacyCopy()?', "Language Noto Serif JP"':''}`;
+  const SANS = (s, w = 600) => `${w} ${s}px Nunito${legacyCopy()?', "Language Noto Sans JP"':''}`;
   // the Keeper mark: the f, in its 256-unit square (cast/fernwise/mark.svg)
   const MARK = new Path2D('M126 129V180C126 214 102 236 70 236C54 236 40 232 27 224L40 200C49 205 59 208 69 208C84 208 92 198 92 182V129H57V99H92V78C92 39 114 19 149 19C172 19 190 28 203 42L182 65C173 55 163 50 152 50C134 50 126 61 126 80V99H180L169 129Z');
 
@@ -42,6 +42,10 @@
   // the languages, in the order the film shows them: the capture and the language's own name
   const LANGS = [['en', 'English'], ['es', 'Español'], ['ja', '日本語'], ['de', 'Deutsch'], ['pt', 'Português']];
   let V = DEFAULTS;
+  // The original language label already has locally bundled Japanese faces.
+  // Give those faces private names so later CJK edits cannot replace their ink.
+  const legacyCopy=()=>!Object.values(V).some(value=>typeof value==='string'&&kit.hasCJK(value));
+  const labelFont=(font,value)=>value==='日本語'&&!legacyCopy()?kit.font(font,value,'ja'):font;
 
   // ---------- the beats (120 BPM) ----------
   const T = {
@@ -100,8 +104,8 @@
   }
 
   // ---------- type helpers ----------
-  function text(c, s, x, y, font, colour, align = 'left', base = 'middle') {
-    c.font = font; c.fillStyle = colour; c.textAlign = align;
+  function text(c, s, x, y, font, colour, align = 'left', base = 'middle') { s = kit.copyText(s);
+    c.font = labelFont(font,s); c.fillStyle = colour; c.textAlign = align;
     if (base === 'middle') window.kit.centreText(c, s, x, y); else { c.textBaseline = base; c.fillText(s, x, y); }
   }
   // a line rising out of a mask line: p 0 → 1 rises in, 1 → 2 rises out through the top
@@ -119,26 +123,26 @@
   const headDy = (t) => easeInOutCubic(clamp((t - T.count) / T.toRow)) * 300;
   function headline(t) {
     const dy = headDy(t), y1 = HEAD.y1 + dy, y2 = HEAD.y2 + dy;
-    const words = `${V.name} ${V.speaks}`.split(' '), s1 = Math.min(HEAD.s1, (HEAD.s1 * 960) / Math.max(1, measure(g, SERIF(HEAD.s1), words.join(' ')))), font = SERIF(s1); // a long name sets smaller, never off the frame
-    g.font = font; const total = measure(g, font, words.join(' ')), space = measure(g, font, ' ');
+    const words = kit.words(`${V.name} ${V.speaks}`, ' '), s1 = Math.min(HEAD.s1, (HEAD.s1 * 960) / Math.max(1, measure(g, SERIF(HEAD.s1), (kit.hasCJK(`${V.name} ${V.speaks}`) ? `${V.name} ${V.speaks}` : words.join(' '))))), font = SERIF(s1); // a long name sets smaller, never off the frame
+    g.font = font; const total = measure(g, font, (kit.hasCJK(`${V.name} ${V.speaks}`) ? `${V.name} ${V.speaks}` : words.join(' '))), space = measure(g, font, ' ');
     let x = W / 2 - total / 2;
     words.forEach((w, i) => {
       const ww = measure(g, font, w), p = riseP(t, T.head + i * 0.08, T.endOut + i * 0.03);
       rise(g, () => text(g, w, x, y1, font, CREAM, 'left', 'alphabetic'), y1, s1, p);
-      x += ww + space;
+      x += ww + (kit.hasCJK(`${V.name} ${V.speaks}`) && !kit.wordGap(`${V.name} ${V.speaks}`,i) ? 0 : space);
     });
     // the language's own name, in italic; each new one rolls up into place; then the count
     const items = [...LANGS.map(([, n]) => n), V.count], times = [T.first, ...T.lang, T.count];
     items.forEach((s, i) => {
       const tout = i + 1 < times.length ? times[i + 1] : T.endOut;
-      const size = Math.min(HEAD.s2, (HEAD.s2 * 940) / Math.max(1, measure(g, ITALIC(HEAD.s2), s)));
+      const size = Math.min(HEAD.s2, (HEAD.s2 * 940) / Math.max(1, measure(g, labelFont(ITALIC(HEAD.s2),s), s)));
       rise(g, () => text(g, s, W / 2, y2, ITALIC(size), SPROUT, 'center', 'alphabetic'), y2, HEAD.s2, riseP(t, times[i] + (i ? 0.14 : 0), tout, i ? 0.38 : 0.32), y1 + s1 * 0.32); // the old name leaves first, the new one follows it up, under the line above
     });
   }
   // every language, in its own name, under its phone in the row
   function names(t) {
     LANGS.forEach(([, n], i) => {
-      const x = W / 2 + (i - (LANGS.length - 1) / 2) * ROW.step, base = ROW.top + SCREEN.h * ROW.scale + 78, size = Math.min(32, (32 * 190) / Math.max(1, measure(g, SANS(32, 700), n)));
+      const x = W / 2 + (i - (LANGS.length - 1) / 2) * ROW.step, base = ROW.top + SCREEN.h * ROW.scale + 78, size = Math.min(32, (32 * 190) / Math.max(1, measure(g, labelFont(SANS(32,700),n), n)));
       rise(g, () => text(g, n, x, base, SANS(size, 700), CREAM, 'center', 'alphabetic'), base, 32, riseP(t, T.names + i * 0.07, T.endOut + i * 0.03));
     });
   }
@@ -168,15 +172,19 @@
     return canvas;
   }
 
-  async function prepare() {
+  async function prepare(values = {}) {
+    // Preserve the approved label only for Latin product copy. New CJK copy
+    // uses the shared Sans fallback, including this label.
+    const latin=!Object.values({...DEFAULTS,...values}).some(value=>typeof value==='string'&&kit.hasCJK(value));
+    if(!latin){await kit.prepareText({lang:'ja',nativeLabel:'日本語'});kit.useText({...DEFAULTS,...values});}
     const S = window.SCREENS;
     if (!SCR.caps['today-en']) { Object.assign(SCR.caps, S.captures); Object.assign(SCR.rects, S.rects); }
     await Promise.all([
       loadFont('Fraunces', 'assets/fonts/fraunces-soft.ttf', { weight: '100 900' }),
       loadFont('Fraunces Italic', 'assets/fonts/fraunces-soft-italic.ttf', { weight: '100 900' }),
       loadFont('Nunito', 'assets/fonts/nunito-variable.ttf', { weight: '200 1000' }),
-      loadFont('Noto Serif JP', 'assets/fonts/noto-serif-jp-subset.ttf', { weight: '200 900' }),
-      loadFont('Noto Sans JP', 'assets/fonts/noto-sans-jp-subset.ttf', { weight: '100 900' }),
+      ...(latin?[loadFont('Language Noto Serif JP', 'assets/fonts/noto-serif-jp-subset.ttf', { weight: '200 900' })]:[]),
+      ...(latin?[loadFont('Language Noto Sans JP', 'assets/fonts/noto-sans-jp-subset.ttf', { weight: '100 900' })]:[]),
       (async () => { if (!SCR.phone) SCR.phone = await loadImage('assets/art/phone.png'); })(),
       ...LANGS.map(async ([l]) => { const n = `today-${l}`; if (!SCR.img[n]) SCR.img[n] = await loadImage(`assets/screens/${SCR.caps[n].file}`); }),
     ]);
@@ -197,9 +205,9 @@
     sections: [{ from: 0, to: 1, pad: 0.7, hats: 0.3 }, { from: 1, to: 5.5, kick: 0.7, hats: 0.55, bass: 0.6, pad: 0.55 }, { from: 5.5, to: 7.25, pad: 0.7, hats: 0.3 }],
   };
   const STATES = [[0, 'Headline'], [T.lang[0], 'Español'], [T.lang[1], '日本語'], [T.lang[2], 'Deutsch'], [T.lang[3], 'Português'], [T.count, 'The count'], [T.endOut, 'End card']];
-  window.template = { fps: FPS, duration: DURATION, sizes: { '9:16': [1080, 1920] }, width: W, height: H, defaults: () => ({ size: '9:16', ...DEFAULTS }), fields: FIELDS, states: STATES, prepare, seek: (t, values) => seek(t, values), cues, music,
-    keyTimes: [0.2, 0.7, 1.6, 2.8, 3.6, 4.5, 5.4, 6.3, 7.2, 8.0, 8.9, 9.8, 10.6, 11.4, 12.9, 14.1] };
+  window.template = kit.film({ fps: FPS, duration: DURATION, sizes: { '9:16': [1080, 1920] }, width: W, height: H, defaults: () => ({ size: '9:16', ...DEFAULTS }), fields: FIELDS, states: STATES, prepare, seek: (t, values) => seek(t, values), cues, music,
+    keyTimes: [0.2, 0.7, 1.6, 2.8, 3.6, 4.5, 5.4, 6.3, 7.2, 8.0, 8.9, 9.8, 10.6, 11.4, 12.9, 14.1] });
   const q = new URLSearchParams(location.search);
-  if (window.parent === window && !q.has('render')) prepare().then(() => { const t0 = performance.now(); const loop = () => { seek(((performance.now() - t0) / 1000) % DURATION, {}); requestAnimationFrame(loop); }; loop(); });
+  if (window.parent === window && !q.has('render')) window.template.prepare().then(() => { const t0 = performance.now(); const loop = () => { seek(((performance.now() - t0) / 1000) % DURATION, {}); requestAnimationFrame(loop); }; loop(); });
 })();
 </script>

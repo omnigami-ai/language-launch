@@ -5,6 +5,8 @@ description: Make a 15-second announcement video that a product now speaks more 
 
 # Language launch
 
+For Japanese, Korean or Chinese product pages, keep the copy in that language and set the film’s `lang` to the page’s `<html lang>`; bundled Noto faces and phrase breaks handle the text.
+
 You make a 15-second film (14.5 s) that says one thing: the product now speaks more
 languages. The headline says it in the product's own type ("Fernwise now
 speaks", then *English*, *Español*, *日本語*… in each language's own name),
