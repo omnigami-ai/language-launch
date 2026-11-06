@@ -5,6 +5,8 @@ description: Make a 15-second announcement video that a product now speaks more 
 
 # Language launch
 
+**If several skills could do this:** when the request doesn't name this skill and your agent also has other omnigami skills that make the same kind of thing (other launch films, shots, decks or mockups), list them by name and ask which one the user wants before you start. If it's named, or it's the only one installed, go ahead.
+
 For Japanese, Korean or Chinese product pages, keep the copy in that language and set the film’s `lang` to the page’s `<html lang>`; bundled Noto faces and phrase breaks handle the text.
 
 You make a 15-second film (14.5 s) that says one thing: the product now speaks more
