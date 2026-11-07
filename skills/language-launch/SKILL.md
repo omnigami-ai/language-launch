@@ -1,6 +1,9 @@
 ---
 name: language-launch
-description: Make a 15-second announcement video that a product now speaks more languages, on its real screens - the headline "<name> now speaks" over each language's own name, a carousel of the product's real screen, one phone per language, swiping one over as each name rolls in, each held long enough to read, then every phone flying into one row under the count, and the end card. Renders a tall (9:16) MP4 with sound. Use when the user asks for a localization, translation, "now in N languages", new languages or international launch video.
+description: >-
+  Localization announcement video: "<name> now speaks" over each language's own name, one phone per language showing
+  your real translated screens, then all of them in a row. 15 seconds, tall, with sound. Use when the user asks for a
+  localization, translation, "now in N languages", new languages or international launch video.
 ---
 
 # Language launch
