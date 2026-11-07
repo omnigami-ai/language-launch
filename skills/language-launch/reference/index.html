@@ -60,7 +60,8 @@
   // ---------- the phone: an unbranded phone, photographed, its screen cut out ----------
   const PHONE_SCREEN = [25, 26, 490, 1118];          // the screen's rect in phone.png's pixels
   const U = 2;                                       // frame px per CSS px of the captures
-  const SCREEN = { w: 390 * U, h: 390 * U * PHONE_SCREEN[3] / PHONE_SCREEN[2], r: 44 * U };
+  // Match the photograph's 49 px aperture mask at its native 490 px width; the photograph supplies the final edge.
+  const SCREEN = { w: 390 * U, h: 390 * U * PHONE_SCREEN[3] / PHONE_SCREEN[2], r: 49 * 390 * U / PHONE_SCREEN[2] };
   const SCR = { img: {}, scale: 4, rects: {}, caps: {} };
   // the phones: one per language, side by side in a carousel, its neighbours peeking in at the edges.
   // Each new language swipes the row one phone over (fast out, a soft settle; the phone in the middle

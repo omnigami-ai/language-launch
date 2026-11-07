@@ -1,7 +1,7 @@
 {
   "name": "omnigami-language-launch",
   "displayName": "Language launch",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Localization announcement video: \"<name> now speaks\" over each language's own name, one phone per language showing your real translated screens, then all of them in a row. 15 seconds, tall, with sound. Use when the user asks for a localization, translation, \"now in N languages\", new languages or international launch video.",
   "author": {
     "name": "omnigami",

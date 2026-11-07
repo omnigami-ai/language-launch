@@ -85,6 +85,7 @@ Read `style.md` before you start and `critique.md` before you judge.
 - **Keep the motion.** A name never rises into the line above; the old one leaves before the new one rises; shapes change in one move (`style.md`).
 - **Keep the engine rules** (`style.md`): `seek(t)` paints from its arguments only; no clocks, no `Math.random`, no timers, no network; every file inside `film/`.
 - **Only the user's brand.** No other company's name, logo or UI: the phone is the reference's unbranded photograph.
+- **Phone corners:** the photograph's 490 px opening has roughly 50 px corners. Use a 49 px backing mask and scale that radius with the screen width (`49 * screenWidth / 490`); a tighter mask pinches the border. Inspect all four corners before the carousel or output frame crops them.
 
 ## Files
 
